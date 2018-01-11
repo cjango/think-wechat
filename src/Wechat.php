@@ -8,11 +8,18 @@
 // +------------------------------------------------+
 namespace cjango\wechat;
 
+use think\Config;
+
 class Wechat
 {
     protected $config;
 
     public function __construct()
+    {
+        $this->config = Config::get('wechat');
+    }
+
+    public function instance()
     {
 
     }
