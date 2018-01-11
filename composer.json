@@ -28,7 +28,7 @@
     },
     "extra": {
         "think-config": {
-            "sms": "src/config.php"
+            "wechat": "src/config.php"
         }
     }
 }
