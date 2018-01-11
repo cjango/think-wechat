@@ -10,5 +10,10 @@ namespace cjango\wechat;
 
 class Wechat
 {
+    protected $config;
 
+    public function __construct()
+    {
+
+    }
 }
