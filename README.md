@@ -1,4 +1,7 @@
 # think-wechat
+===============
+
+[![Latest Stable Version](https://poser.pugx.org/cjango/think-wechat/version)](https://packagist.org/packages/cjango/think-wechat)
 
 #### 微信SDK For thinkphp5
 
