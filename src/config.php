@@ -7,6 +7,11 @@
 // | Author: 小陈叔叔 <Jason.Chen>                  |
 // +------------------------------------------------+
 
+// 绕过微信域名文件认证
+\think\Route::rule('MP_verify_<code>', function ($code) {
+    exit($code);
+}, 'GET', ['ext' => 'txt']);
+
 return [
     // TOKEN
     'token'  => '',

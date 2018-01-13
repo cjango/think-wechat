@@ -10,11 +10,10 @@ namespace cjango\wechat\library;
 
 class Util
 {
-    protected static $error;
 
     protected $result;
 
-    public static function get($url, $params = '')
+    public static function get($url, $params = [])
     {
         $opts = [
             CURLOPT_TIMEOUT        => 30,
@@ -27,9 +26,58 @@ class Util
         /* 初始化并执行curl请求 */
         $ch = curl_init();
         curl_setopt_array($ch, $opts);
-        $data   = curl_exec($ch);
-        $err    = curl_errno($ch);
-        $errmsg = curl_error($ch);
+        $data = curl_exec($ch);
+        $err  = curl_errno($ch);
+        curl_close($ch);
+        if ($err > 0) {
+            return false;
+        } else {
+            return $data;
+        }
+    }
+
+    public static function post($url, $params = [])
+    {
+        $opts = [
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_URL            => $url,
+            CURLOPT_POST           => 1,
+            CURLOPT_POSTFIELDS     => $params,
+        ];
+        /* 初始化并执行curl请求 */
+        $ch = curl_init();
+        curl_setopt_array($ch, $opts);
+        $data = curl_exec($ch);
+        $err  = curl_errno($ch);
+        curl_close($ch);
+        if ($err > 0) {
+            return false;
+        } else {
+            return $data;
+        }
+    }
+
+    public static function postSsl($url, $params = [], $pem = [])
+    {
+        $opts = [
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_URL            => $url,
+            CURLOPT_POST           => 1,
+            CURLOPT_POSTFIELDS     => $params,
+            CURLOPT_SSLCERT        => $pem['cert'],
+            CURLOPT_SSLKEY         => $pem['key'],
+        ];
+        /* 初始化并执行curl请求 */
+        $ch = curl_init();
+        curl_setopt_array($ch, $opts);
+        $data = curl_exec($ch);
+        $err  = curl_errno($ch);
         curl_close($ch);
         if ($err > 0) {
             return false;
@@ -39,33 +87,13 @@ class Util
     }
 
     /**
-     * 解析返回的json数据
-     * @param  [type] $json
-     * @return
-     */
-    // {"errcode":40164,"errmsg":"invalid ip 139.129.108.141, not in whitelist hint: [1QPF704341466]"}
-    public static function parse($json)
-    {
-        $result = json_decode($json);
-        if (isset($result->errcode) && $result->errcode == 0) {
-            return $result;
-        } elseif ($result->errcode != 0) {
-            self::$error = $result->errmsg;
-            return false;
-        } else {
-            return $result;
-        }
-    }
-
-    /**
      * XML文档解析成数组，并将键值转成小写
      * @param  xml   $xml
      * @return array
      */
-    public static function xml2array($xml)
+    public static function xml2array($xml): array
     {
-        $data = (array) simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
-        return array_change_key_case($data, CASE_LOWER);
+        return (array) simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
     }
 
     /**
@@ -104,10 +132,5 @@ class Util
                 }
             }
         }
-    }
-
-    public static function getError()
-    {
-        return self::$error;
     }
 }

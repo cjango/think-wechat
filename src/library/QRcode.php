@@ -8,72 +8,74 @@
 // +------------------------------------------------+
 namespace cjango\wechat\library;
 
-class QRcode
+class QRcode extends Init
 {
     /**
      * 接口名称与URL映射
      * @var array
      */
-    protected static $url = [
-        'qrcode_create' => 'https://api.weixin.qq.com/cgi-bin/qrcode/create',
+    protected $url = [
+        'qrcode_create' => 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=',
         'qrcode_show'   => 'https://mp.weixin.qq.com/cgi-bin/showqrcode',
-        'short_url'     => 'https://api.mch.weixin.qq.com/tools/shorturl',
+        'short_url'     => 'https://api.weixin.qq.com/cgi-bin/shorturl?access_token=',
     ];
-
-    protected $config;
-
-    public function __construct(array $config)
-    {
-        $this->config = $config;
-    }
 
     /**
      * 临时二维码
-     * @param  [type]  $scene_id [description]
-     * @param  integer $expire   [description]
-     * @return [type]            [description]
+     * @param  [type]  $sceneId 场景值
+     * @param  integer $expire  有效期
+     * @param  boolean $master  返回场景URL
+     * @return [type]
      */
-    public function temp($scene_id, $expire = 604800)
+    public function temp($sceneId, $expire = 604800, $master = false)
     {
-        $params = [
-            'expire_seconds' => $expire,
-            'action_name'    => 'QR_SCENE',
-            'action_info'    => [
-                'scene' => [
-                    'scene_id' => $scene_id,
-                ],
-            ],
-        ];
-        $params = json_encode($params, JSON_UNESCAPED_UNICODE);
-        $result = Utils::api(self::$url['qrcode_create'] . '?access_token=' . parent::$config['access_token'], $params, 'POST');
-        if ($result) {
-            return self::$url['qrcode_show'] . '?ticket=' . $result['ticket'];
+        $params['expire_seconds'] = $expire;
+
+        if (is_integer($sceneId)) {
+            $params['action_name'] = 'QR_SCENE';
+            $params['action_info'] = ['scene' => ['scene_id' => $sceneId]];
+        } elseif (is_string($sceneId) || is_float($sceneId)) {
+            $params['action_name'] = 'QR_STR_SCENE';
+            $params['action_info'] = ['scene' => ['scene_str' => $sceneId]];
         } else {
             return false;
+        }
+
+        $params = json_encode($params, JSON_UNESCAPED_UNICODE);
+        $result = Util::post($this->url['qrcode_create'] . $this->config['access_token'], $params);
+        $result = json_decode($result);
+        if ($master) {
+            return $result->url;
+        } else {
+            return $this->url['qrcode_show'] . '?ticket=' . urlencode($result->ticket);
         }
     }
 
     /**
      * 永久二维码
-     * @return [type] [description]
+     * @param  [type]  $sceneId 场景值
+     * @param  boolean $master  返回场景URL
+     * @return [type]
      */
-    public static function limit($scene_str)
+    public function limit($sceneId, $master = false)
     {
-        $params = [
-            'action_name'  => 'QR_LIMIT_SCENE',
-            'action_info'  => [
-                'scene' => [
-                    'scene_str' => $scene_str,
-                ],
-            ],
-            'access_token' => parent::$config['access_token'],
-        ];
-        $params = json_encode($params, JSON_UNESCAPED_UNICODE);
-        $result = Utils::api(self::$url['qrcode_create'] . '?access_token=' . parent::$config['access_token'], $params, 'POST');
-        if ($result) {
-            return self::$url['qrcode_show'] . '?ticket=' . $result['ticket'];
+        if (is_integer($sceneId)) {
+            $params['action_name'] = 'QR_LIMIT_SCENE';
+            $params['action_info'] = ['scene' => ['scene_id' => $sceneId]];
+        } elseif (is_string($sceneId) || is_float($sceneId)) {
+            $params['action_name'] = 'QR_LIMIT_STR_SCENE';
+            $params['action_info'] = ['scene' => ['scene_str' => $sceneId]];
         } else {
             return false;
+        }
+
+        $params = json_encode($params, JSON_UNESCAPED_UNICODE);
+        $result = Util::post($this->url['qrcode_create'] . $this->config['access_token'], $params);
+        $result = json_decode($result);
+        if ($master) {
+            return $result->url;
+        } else {
+            return $this->url['qrcode_show'] . '?ticket=' . urlencode($result->ticket);
         }
     }
 
@@ -82,19 +84,22 @@ class QRcode
      * @param  [type] $longUrl
      * @return [type]
      */
-    public static function short($longUrl)
+    public function short($longUrl)
     {
         $params = [
             'action'   => 'long2short',
             'long_url' => $longUrl,
         ];
-        $params = json_encode($params);
-        $result = Utils::api(self::$url['short_url'] . '?access_token=' . parent::$config['access_token'], $params, 'POST');
-        if ($result) {
-            return $result;
-        } else {
+
+        $params = json_encode($params, JSON_UNESCAPED_UNICODE);
+        $result = Util::post($this->url['short_url'] . $this->config['access_token'], $params);
+        $result = json_decode($result);
+
+        if (isset($result->errcode) && $result->errcode != 0) {
+            $this->setError($result->errmsg);
             return false;
+        } else {
+            return $result->short_url;
         }
     }
-
 }
