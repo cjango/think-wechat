@@ -2,6 +2,9 @@
 ===============
 
 [![Latest Stable Version](https://poser.pugx.org/cjango/think-wechat/version)](https://packagist.org/packages/cjango/think-wechat)
+[![Total Downloads](https://poser.pugx.org/cjango/think-wechat/downloads)](https://packagist.org/packages/cjango/think-wechat)
+[![Latest Unstable Version](https://poser.pugx.org/cjango/think-wechat/v/unstable)](//packagist.org/packages/cjango/think-wechat)
+[![License](https://poser.pugx.org/cjango/think-wechat/license)](https://packagist.org/packages/cjango/think-wechat)
 
 #### 微信SDK For thinkphp5
 
