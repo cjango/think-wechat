@@ -8,7 +8,7 @@
 
 #### 微信SDK For thinkphp5
 
-> 该项目依赖于thinkphp5.0.*，省去了access_token的获取与暂存，系统内部自动集成，需要什么功能直接调用即可，设计模式参考了thinkphp的容器模式，目前暂时只有部分基础功能，待完善。
+> 该项目属于于thinkphp5.0.*扩展，省去了access_token的获取与暂存，系统内部自动集成，需要什么功能直接调用即可，设计模式参考了thinkphp的容器模式，目前暂时只有部分基础功能，待完善。
 
 ## 安装
 > composer require cjango/think-wechat
