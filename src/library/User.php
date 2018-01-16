@@ -36,7 +36,7 @@ class User extends Init
             'access_token' => $this->config['access_token'],
         ];
         $result = Util::get($this->url['user_get'], $params);
-        $result = json_decode($result);
+
         if (isset($result->errcode) && $result->errcode != 0) {
             $this->setError($result->errmsg);
             return false;
@@ -59,7 +59,6 @@ class User extends Init
             'lang'         => $lang,
         ];
         $result = Util::get($this->url['user_info'], $params);
-        $result = json_decode($result);
 
         if (isset($result->errcode) && $result->errcode != 0) {
             $this->setError($result->errmsg);

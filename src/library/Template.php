@@ -30,7 +30,7 @@ class Template extends Init
     public function get()
     {
         $result = Util::get($this->url['get_template'] . $this->config['access_token']);
-        $result = json_decode($result);
+
         return $result->template_list;
     }
 
@@ -46,7 +46,6 @@ class Template extends Init
         ];
         $params = json_encode($params);
         $result = Util::post($this->url['del_template'] . $this->config['access_token'], $params);
-        $result = json_decode($result);
 
         if (isset($result->errcode) && $result->errcode != 0) {
             $this->setError($result->errmsg);
@@ -75,7 +74,7 @@ class Template extends Init
         ];
         $params = json_encode($params, JSON_UNESCAPED_UNICODE);
         $result = Util::post($this->url['send_template'] . $this->config['access_token'], $params);
-        $result = json_decode($result);
+
         if (isset($result->errcode) && $result->errcode != 0) {
             $this->setError($result->errmsg);
             return false;

@@ -35,7 +35,7 @@ class Token extends Init
             'grant_type' => 'client_credential',
         ];
         $result = Util::get($this->url['access_token'], $params);
-        $result = json_decode($result);
+
         if (isset($result->errcode) && $result->errcode != 0) {
             $this->setError($result->errmsg);
             return false;
@@ -74,7 +74,6 @@ class Token extends Init
             'type'         => 'jsapi',
         ];
         $result = Util::get($this->url['jsapi_ticket'], $params);
-        $result = json_decode($result);
 
         if (isset($result->errcode) && $result->errcode != 0) {
             $this->setError($result->errmsg);

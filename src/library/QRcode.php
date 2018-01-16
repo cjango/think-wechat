@@ -43,7 +43,7 @@ class QRcode extends Init
 
         $params = json_encode($params, JSON_UNESCAPED_UNICODE);
         $result = Util::post($this->url['qrcode_create'] . $this->config['access_token'], $params);
-        $result = json_decode($result);
+
         if ($master) {
             return $result->url;
         } else {
@@ -71,7 +71,7 @@ class QRcode extends Init
 
         $params = json_encode($params, JSON_UNESCAPED_UNICODE);
         $result = Util::post($this->url['qrcode_create'] . $this->config['access_token'], $params);
-        $result = json_decode($result);
+
         if ($master) {
             return $result->url;
         } else {
@@ -93,7 +93,6 @@ class QRcode extends Init
 
         $params = json_encode($params, JSON_UNESCAPED_UNICODE);
         $result = Util::post($this->url['short_url'] . $this->config['access_token'], $params);
-        $result = json_decode($result);
 
         if (isset($result->errcode) && $result->errcode != 0) {
             $this->setError($result->errmsg);

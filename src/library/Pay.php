@@ -63,7 +63,6 @@ class Pay extends Init
 
         $params = Util::array2xml($params);
         $result = Util::post($this->url['unified_order'], $params);
-        $result = self::response($result);
 
         if ($result) {
             $return['appId']     = $this->config['appid'];
@@ -106,7 +105,6 @@ class Pay extends Init
 
         $params = Util::array2xml($params);
         $result = Util::post($this->url['unified_order'], $params);
-        $result = self::response($result);
 
         if ($result) {
             return $result['code_url'];
@@ -159,7 +157,6 @@ class Pay extends Init
 
         $params = Util::array2xml($params);
         $result = Util::http($this->url['close_order'], $params);
-        $result = self::response($result);
 
         if ($result) {
             return true;
@@ -196,7 +193,7 @@ class Pay extends Init
         $params = Util::array2xml($params);
         $result = Util::postSsl($this->url['refund_order'], $params, $this->config['pem']);
         if ($result) {
-            $result = self::response($result);
+
             if ($result) {
                 return $result;
             } else {
@@ -242,7 +239,6 @@ class Pay extends Init
 
         $params = Util::array2xml($params);
         $result = Util::post($this->url['refund_query'], $params);
-        $result = self::response($result);
 
         if ($result) {
             return $result;
@@ -283,7 +279,7 @@ class Pay extends Init
         $params = Util::array2xml($params);
         $result = Util::postSsl($this->url['send_redpack'], $params);
         if ($result) {
-            $result = self::response($result);
+
             if ($result) {
                 return $result;
             } else {
@@ -318,7 +314,7 @@ class Pay extends Init
         $params = Util::array2xml($params);
         $result = Util::postSsl($this->url['send_group_redpack'], $params);
         if ($result) {
-            $result = self::response($result);
+
             if ($result) {
                 return $result;
             } else {
@@ -345,7 +341,7 @@ class Pay extends Init
         $params = Util::array2xml($params);
         $result = Util::postSsl($this->url['get_redpack_info'], $params);
         if ($result) {
-            $result = self::response($result);
+
             if ($result) {
                 return $result;
             } else {

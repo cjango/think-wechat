@@ -19,7 +19,13 @@ class Util
     {
         $client   = new Client();
         $response = $client->request('GET', $url, ['query' => $query]);
+        dump($response);
         return (string) $response->getBody();
+    }
+
+    public function parseResponseBody($response)
+    {
+
     }
 
     public static function post($url, $body = [])
@@ -31,28 +37,9 @@ class Util
 
     public static function postSsl($url, $params = [], $pem = [])
     {
-        $opts = [
-            CURLOPT_TIMEOUT        => 30,
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_URL            => $url,
-            CURLOPT_POST           => 1,
-            CURLOPT_POSTFIELDS     => $params,
-            CURLOPT_SSLCERT        => $pem['cert'],
-            CURLOPT_SSLKEY         => $pem['key'],
-        ];
-        /* 初始化并执行curl请求 */
-        $ch = curl_init();
-        curl_setopt_array($ch, $opts);
-        $data = curl_exec($ch);
-        $err  = curl_errno($ch);
-        curl_close($ch);
-        if ($err > 0) {
-            return false;
-        } else {
-            return $data;
-        }
+        $client   = new Client();
+        $response = $client->request('POST', $url, ['body' => $body, 'cert' => $pem['cert'], 'ssl_key' => $pem['key']]);
+        return (string) $response->getBody();
     }
 
     /**

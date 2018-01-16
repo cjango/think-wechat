@@ -62,7 +62,7 @@ class Oauth extends Init
             'grant_type' => 'authorization_code',
         ];
         $result = Util::get($this->url['oauth_user_token'], $params);
-        $result = json_decode($result);
+
         if (isset($result->errcode) && $result->errcode != 0) {
             $this->setError($result->errmsg);
             return false;

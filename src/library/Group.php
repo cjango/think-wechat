@@ -34,7 +34,7 @@ class Group extends Init
             'access_token' => $this->config['access_token'],
         ];
         $result = Util::get($this->url['group_get'], $params);
-        $result = json_decode($result);
+
         if ($result) {
             return $result->groups;
         } else {
@@ -56,7 +56,7 @@ class Group extends Init
         ];
         $params = json_encode($params, JSON_UNESCAPED_UNICODE);
         $result = Util::post($this->url['group_create'] . $this->config['access_token'], $params);
-        $result = json_decode($result);
+
         if ($result) {
             return $result->group;
         } else {
@@ -80,7 +80,6 @@ class Group extends Init
         ];
         $params = json_encode($params, JSON_UNESCAPED_UNICODE);
         $result = Util::api($this->url['group_update'] . $this->config['access_token'], $params);
-        $result = json_decode($result);
 
         if ($result) {
             return true;
@@ -103,7 +102,6 @@ class Group extends Init
         ];
         $params = json_encode($params);
         $result = Util::api($this->url['group_delete'] . $this->config['access_token'], $params);
-        $result = json_decode($result);
 
         if ($result) {
             return true;

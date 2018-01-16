@@ -31,7 +31,7 @@ class Menu extends Init
             'access_token' => $this->config['access_token'],
         ];
         $result = Util::get($this->url['menu_get'], $params);
-        $result = json_decode($result);
+
         if ($result) {
             return $result->menu->button;
         } else {
@@ -51,7 +51,7 @@ class Menu extends Init
         ];
         $params = json_encode($params, JSON_UNESCAPED_UNICODE);
         $result = Util::post($this->url['menu_create'] . $this->config['access_token'], $params);
-        $result = json_decode($result);
+
         if (isset($result->errcode) && $result->errcode != 0) {
             $this->setError($result->errmsg);
             return false;
@@ -70,7 +70,6 @@ class Menu extends Init
             'access_token' => $this->config['access_token'],
         ];
         $result = Util::get($this->url['menu_delete'], $params);
-        $result = json_decode($result);
 
         if (isset($result->errcode) && $result->errcode != 0) {
             $this->setError($result->errmsg);
