@@ -9,6 +9,7 @@
 namespace cjango\wechat\library;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
 
 class Util
 {
@@ -19,27 +20,40 @@ class Util
     {
         $client   = new Client();
         $response = $client->request('GET', $url, ['query' => $query]);
-        dump($response);
-        return (string) $response->getBody();
-    }
 
-    public function parseResponseBody($response)
-    {
-
+        return self::parseBody($response);
     }
 
     public static function post($url, $body = [])
     {
         $client   = new Client();
         $response = $client->request('POST', $url, ['body' => $body]);
-        return (string) $response->getBody();
+
+        return self::parseBody($response);
     }
 
     public static function postSsl($url, $params = [], $pem = [])
     {
         $client   = new Client();
         $response = $client->request('POST', $url, ['body' => $body, 'cert' => $pem['cert'], 'ssl_key' => $pem['key']]);
-        return (string) $response->getBody();
+
+        return self::parseBody($response);
+    }
+
+    private static function parseBody(Response $response)
+    {
+        $type = $response->getHeaderLine('content-type');
+        $body = (string) $response->getBody();
+
+        if (strpos($type, 'json')) {
+            $result = json_decode($body);
+        } elseif ($type = "text/plan") {
+            $result = self::xml2array($body);
+        } else {
+            $result = $body;
+        }
+
+        return $result;
     }
 
     /**
