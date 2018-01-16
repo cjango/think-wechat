@@ -23,11 +23,11 @@ class QRcode extends Init
     /**
      * 临时二维码
      * @param  [type]  $sceneId 场景值
-     * @param  integer $expire  有效期
+     * @param  integer $expire  有效期 30 - 2592000 30秒 - 30 天
      * @param  boolean $master  返回场景URL
      * @return [type]
      */
-    public function temp($sceneId, $expire = 604800, $master = false)
+    public function temp($sceneId, $expire = 2592000, $master = false)
     {
         $params['expire_seconds'] = $expire;
 

@@ -8,56 +8,25 @@
 // +------------------------------------------------+
 namespace cjango\wechat\library;
 
+use GuzzleHttp\Client;
+
 class Util
 {
 
     protected $result;
 
-    public static function get($url, $params = [])
+    public static function get($url, array $query = [])
     {
-        $opts = [
-            CURLOPT_TIMEOUT        => 30,
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
-        ];
-        $getQuerys         = !empty($params) ? '?' . urldecode(http_build_query($params)) : '';
-        $opts[CURLOPT_URL] = $url . $getQuerys;
-        /* 初始化并执行curl请求 */
-        $ch = curl_init();
-        curl_setopt_array($ch, $opts);
-        $data = curl_exec($ch);
-        $err  = curl_errno($ch);
-        curl_close($ch);
-        if ($err > 0) {
-            return false;
-        } else {
-            return $data;
-        }
+        $client   = new Client();
+        $response = $client->request('GET', $url, ['query' => $query]);
+        return (string) $response->getBody();
     }
 
-    public static function post($url, $params = [])
+    public static function post($url, $body = [])
     {
-        $opts = [
-            CURLOPT_TIMEOUT        => 30,
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_URL            => $url,
-            CURLOPT_POST           => 1,
-            CURLOPT_POSTFIELDS     => $params,
-        ];
-        /* 初始化并执行curl请求 */
-        $ch = curl_init();
-        curl_setopt_array($ch, $opts);
-        $data = curl_exec($ch);
-        $err  = curl_errno($ch);
-        curl_close($ch);
-        if ($err > 0) {
-            return false;
-        } else {
-            return $data;
-        }
+        $client   = new Client();
+        $response = $client->request('POST', $url, ['body' => $body]);
+        return (string) $response->getBody();
     }
 
     public static function postSsl($url, $params = [], $pem = [])
